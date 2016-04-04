@@ -18,7 +18,7 @@ mongoose.connect(config.db_host);
 routes.mount(app);
 
 // Listen for requests
-var port   = process.env.PORT || 3000;
+var port   = config.port || process.env.PORT;
 var server = app.listen(port, function() { console.log("Listening on port " + port) });
 
 module.exports = server;
