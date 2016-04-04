@@ -12,7 +12,7 @@ var app = express();
 app.use(bodyParser.json());
 
 // Connect to DB
-mongoose.connect(config.db_host);
+mongoose.connect(config.db_host || 'mongodb://localhost/');
 
 // Mount Routes
 routes.mount(app);
