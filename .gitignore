@@ -38,4 +38,4 @@ data/*
 
 # Artifacts
 .swp
-.DStore
+.DS_Store
