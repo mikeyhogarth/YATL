@@ -1,4 +1,6 @@
 # Yet another todo list
+[![Build Status](https://travis-ci.org/mikeyhogarth/YATL.svg?branch=master)](https://travis-ci.org/mikeyhogarth/YATL)
+[![Code Climate](https://codeclimate.com/github/mikeyhogarth/YATL/badges/gpa.svg)](https://codeclimate.com/github/mikeyhogarth/YATL)
 
 To use: 
 
