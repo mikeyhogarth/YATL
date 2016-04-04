@@ -1,7 +1,6 @@
 var mongoose = require('mongoose');
 var Todo     = require('../../models/todo');
-var config   = require('../../config');
-
+var config   = require('../../config').test;
 
 describe('Todo Model', function() {
   var currentTodo = null;
