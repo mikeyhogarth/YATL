@@ -2,12 +2,18 @@ var envvar   = require('dotenv').config();
 var mongoose = require('mongoose');
 var Todo     = require('../../models/todo');
 
-mongoose.connect(process.env.TEST_DB_HOST);  
 
 describe('Todo Model', function() {
   var currentTodo = null;
 
-  // Before hook
+  // 
+  // Before hooks
+  //
+  before(function(done) { 
+    mongoose.createConnection(process.env.TEST_DB_HOST);  
+    done();
+  });
+
   beforeEach(function(done) {
     t = new Todo({title: "Test", description: "Test"});
     t.save(function(err, todo) {
@@ -16,13 +22,24 @@ describe('Todo Model', function() {
     });
   });
 
-  // After hook
+  //
+  // After hooks
+  //
+  after(function(done) { 
+    mongoose.connection.close();
+    done();
+  });
+
   afterEach(function(done) { 
     Todo.remove({}, function() {
       done();
     });
   });
 
+
+  //
+  // Validation Tests
+  // 
   describe('Validation', function() {
     it('Validates presence of name', function(done) {
       currentTodo.title = null;

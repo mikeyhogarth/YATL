@@ -35,3 +35,7 @@ node_modules
 
 # Local data
 data/*
+
+# Artifacts
+.swp
+.DStore
