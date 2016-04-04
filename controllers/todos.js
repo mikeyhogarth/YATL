@@ -14,6 +14,7 @@ module.exports.index = function(req, res) {
  */
 module.exports.show = function(req, res) {
   Todo.findById(req.params.id, function(err, todo) {
+    res.status(todo ? 200 : 404)
     res.send(err || todo); 
   });
 }

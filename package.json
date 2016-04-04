@@ -5,13 +5,15 @@
   "main": "index.js",
   "scripts": {
     "start": "nf start",
-    "test": "mocha test"
+    "test": "NODE_ENV=test mocha test"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "dotenv": "^2.0.0",
-    "should": "^8.3.0"
+    "should": "^8.3.0",
+    "mocha": "^2.4.5",
+    "supertest": "^1.2.0"
   },
   "dependencies": {
     "body-parser": "^1.15.0",
