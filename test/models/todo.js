@@ -1,6 +1,6 @@
-var envvar   = require('dotenv').config();
 var mongoose = require('mongoose');
 var Todo     = require('../../models/todo');
+var config   = require('../../config');
 
 
 describe('Todo Model', function() {
@@ -10,7 +10,7 @@ describe('Todo Model', function() {
   // Before hooks
   //
   before(function(done) { 
-    mongoose.createConnection(process.env.TEST_DB_HOST);  
+    mongoose.createConnection(config.db_host);  
     done();
   });
 
