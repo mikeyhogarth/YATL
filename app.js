@@ -1,9 +1,8 @@
-var envvar      = require('dotenv').config();
+var config      = require('./config');
 var express     = require('express');
 var bodyParser  = require('body-parser');
 var mongoose    = require('mongoose');
 var routes      = require('./routes');
-var config      = require('./config')[process.env.NODE_ENV || "development"];
 
 // Start the app
 var app = express();
