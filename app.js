@@ -1,8 +1,11 @@
-var config      = require('./config');
 var express     = require('express');
+var fs          = require('fs');
 var bodyParser  = require('body-parser');
 var mongoose    = require('mongoose');
+var logger      = require('morgan')
+var path        = require('path');
 var routes      = require('./routes');
+var config      = require('./config');
 
 // Start the app
 var app = express();
@@ -10,7 +13,11 @@ var app = express();
 // Middlewares
 app.use(bodyParser.json());
 
-// Connect to DB
+// Logging
+var accessLogStream = fs.createWriteStream(path.join(__dirname,'/log/', config.env +'.log'), {flags: 'a'});
+app.use(logger('combined', {stream: accessLogStream}));
+
+// DB
 mongoose.connect(config.db_host);
 
 // Mount Routes
