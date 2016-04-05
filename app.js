@@ -2,7 +2,8 @@ var express     = require('express');
 var fs          = require('fs');
 var bodyParser  = require('body-parser');
 var mongoose    = require('mongoose');
-var logger      = require('morgan')
+var logger      = require('./utilities/logger');
+var httpLog     = require('morgan')
 var path        = require('path');
 var routes      = require('./routes');
 var config      = require('./config');
@@ -13,9 +14,9 @@ var app = express();
 // Middlewares
 app.use(bodyParser.json());
 
-// Logging
+// Http Logging
 var accessLogStream = fs.createWriteStream(path.join(__dirname,'/log/', config.env +'.log'), {flags: 'a'});
-app.use(logger('combined', {stream: accessLogStream}));
+app.use(httpLog('combined', {stream: accessLogStream}));
 
 // DB
 mongoose.connect(config.db_host);
@@ -25,6 +26,6 @@ routes.mount(app);
 
 // Listen for requests
 var port   = config.port || process.env.PORT;
-var server = app.listen(port, function() { console.log("Listening on port " + port) });
+var server = app.listen(port, function() { logger.info("Listening on port " + port) });
 
 module.exports = server;
