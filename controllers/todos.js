@@ -48,7 +48,8 @@ module.exports.create = function(req, res) {
  */ 
 module.exports.destroy = function(req, res) {
   Todo.findById(req.params.id).remove(function(err, todo) {
-    res.send(err || todo); 
+    res.status(err ? 404 : 204)
+    res.send(err || null); 
   });
 };
 
