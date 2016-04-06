@@ -10,7 +10,7 @@ describe('Todo Integration Tests', function() {
   // Support methods - consider extracting in the future
   //
   function createTodoRecord(done) {
-    t = new Todo({title: "Test", description: "Test"});
+    t = new Todo(todoParams.todo);
     t.save(function(err, todo) { 
       currentTodo = todo;
       done(); 
@@ -125,4 +125,42 @@ describe('Todo Integration Tests', function() {
       });
     });
   });
+
+
+  //
+  // #update tests 
+  //
+  describe('#update', function() {
+    afterEach(teardownTodos);
+    beforeEach(createTodoRecord);
+
+    var newTodoParams = { todo: { title: "Test2", description: "Test2" } };
+
+    function responseContainsUpdatedRecord(res) {
+      res.body.title.should.equal(newTodoParams.todo.title);
+      res.body.description.should.equal(newTodoParams.todo.description);
+    }
+
+    describe('with valid parameters', function() {
+      afterEach(expectOneTodo);
+
+      it('updates the record', function(done) {
+        req(server).put('/todos/' + currentTodo.id).send(newTodoParams).expect(responseContainsUpdatedRecord).expect(200, done)
+      });
+    });
+
+    describe('with invalid parameters', function() {
+      afterEach(expectOneTodo);
+      
+      var invalidTodoParams = { todo: { title: "", description: "" } };
+
+      it('returns a 400', function(done) {
+        req(server).put('/todos/' + currentTodo.id).send(invalidTodoParams).expect(400, done);
+      });
+    });
+  });
+
+
+
+
 });

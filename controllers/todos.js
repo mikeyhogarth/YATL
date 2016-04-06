@@ -26,6 +26,7 @@ module.exports.update = function(req, res) {
   Todo.findById(req.params.id, function(err, todo) {
     todo.set(todoParams(req));
     todo.save(function(err, todo) { 
+      res.status(err ? 400 : 200)
       res.send(err || todo); 
     });
   });
