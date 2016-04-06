@@ -4,8 +4,11 @@ var Todo = require('../../models/todo');
 describe('Todo Integration Tests', function() {
   var server;
   var currentTodo;
+  var todoParams = { todo: { title: "Test", description: "Test" } };
 
-  // Helper methods - consider extracting in the future
+  // 
+  // Support methods - consider extracting in the future
+  //
   function createTodoRecord(done) {
     t = new Todo({title: "Test", description: "Test"});
     t.save(function(err, todo) { 
@@ -17,6 +20,15 @@ describe('Todo Integration Tests', function() {
   function teardownTodos(done) {
     Todo.remove({}, function() { done(); });
   }
+
+  function expectNoTodos(done) {
+    Todo.count().then(function(cnt) { cnt.should.equal(0); done();});
+  }
+
+  function expectOneTodo(done) {
+    Todo.count().then(function(cnt) { cnt.should.equal(1); done();});
+  }
+
 
   // Set up a dummy server to send requests to
   before(function() {
@@ -57,6 +69,10 @@ describe('Todo Integration Tests', function() {
     });
   });
 
+
+  //
+  // #show tests 
+  //
   describe('#show', function() {
     beforeEach(createTodoRecord);
     afterEach(teardownTodos);
@@ -78,5 +94,35 @@ describe('Todo Integration Tests', function() {
       });
     });
     
+  });
+
+  //
+  // #create tests 
+  //
+  describe('#create', function() {
+    afterEach(teardownTodos);
+    beforeEach(expectNoTodos);
+
+    function responseContainsRecord(res) {
+      res.body.title.should.equal(todoParams.todo.title);
+      res.body.description.should.equal(todoParams.todo.description);
+    }
+
+
+    describe('with valid parameters', function() {
+      afterEach(expectOneTodo);
+
+      it('creates the record', function(done) {
+        req(server).post('/todos').send(todoParams).expect(responseContainsRecord).expect(201, done)
+      });
+    });
+
+    describe('with invalid parameters', function() {
+      afterEach(expectNoTodos);
+
+      it('returns a 400', function(done) {
+        req(server).post('/todos').expect(400, done);
+      });
+    });
   });
 });

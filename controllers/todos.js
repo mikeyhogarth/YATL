@@ -37,6 +37,7 @@ module.exports.update = function(req, res) {
 module.exports.create = function(req, res) {
   todo = new Todo(todoParams(req));
   todo.save(function(err, todo) {
+    res.status(err ? 400 : 201)
     res.send(err || todo);
   });
 }
