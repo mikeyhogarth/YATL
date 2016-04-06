@@ -29,7 +29,6 @@ describe('Todo Integration Tests', function() {
     Todo.count().then(function(cnt) { cnt.should.equal(1); done();});
   }
 
-
   // Set up a dummy server to send requests to
   before(function() {
     server = require('../../app');
@@ -39,6 +38,7 @@ describe('Todo Integration Tests', function() {
   after(function() {
     server.close();
   });
+
 
   //
   // #index tests 
@@ -57,7 +57,6 @@ describe('Todo Integration Tests', function() {
 
       function responseContainsRecord(res) {
         res.body.should.have.length(1);
-        res.body[0].should.have.property("title");
         res.body[0].title.should.equal(currentTodo.title);
         res.body[0].description.should.equal(currentTodo.description);
       }
@@ -84,17 +83,19 @@ describe('Todo Integration Tests', function() {
     });
 
     describe('when record is present', function() {
-      function responseContainsRecord(res) {
+
+      function responseContainsCurrentRecord(res) {
         res.body.title.should.equal(currentTodo.title);
-        res.body.description.should.equal(currentTodo.description);
+        res.body.description.should.equal(currentTodo.description);  
       }
 
       it('returns the record', function(done) {
-        req(server).get('/todos/' + currentTodo.id).expect(200).expect(responseContainsRecord).end(done);
+        req(server).get('/todos/' + currentTodo.id).expect(200).expect(responseContainsCurrentRecord).end(done);
       });
     });
     
   });
+
 
   //
   // #create tests 
@@ -107,7 +108,6 @@ describe('Todo Integration Tests', function() {
       res.body.title.should.equal(todoParams.todo.title);
       res.body.description.should.equal(todoParams.todo.description);
     }
-
 
     describe('with valid parameters', function() {
       afterEach(expectOneTodo);
@@ -161,6 +161,26 @@ describe('Todo Integration Tests', function() {
   });
 
 
+  //
+  // #destroy tests 
+  //
+  describe('#destroy', function() {
+    beforeEach(createTodoRecord);
+    afterEach(teardownTodos);
 
+    describe('when no record is present', function() {
+      it('returns a 404', function(done) {
+        req(server).delete('/todos/12345').expect(404, done);
+      });
+    });
 
+    describe('when record is present', function() {
+      beforeEach(expectOneTodo);
+      afterEach(expectNoTodos);
+
+      it('returns no content', function(done) {
+        req(server).delete('/todos/' + currentTodo.id).expect(204, done);
+      });
+    });
+  });
 });
