@@ -1,6 +1,8 @@
-var mongoose  = require('mongoose');
+'use strict'
 
-var schema = new mongoose.Schema({ 
+const mongoose  = require('mongoose');
+
+const schema = new mongoose.Schema({ 
   title: {
     type: String,
     required: true
@@ -10,6 +12,4 @@ var schema = new mongoose.Schema({
     required: true
   }});
 
-var Todo = mongoose.model('Todo', schema);
-
-module.exports = Todo;
+module.exports = mongoose.model('Todo', schema);

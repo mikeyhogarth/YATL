@@ -1,16 +1,18 @@
-var req = require('supertest');
-var Todo = require('../../models/todo');
+'use strict'
+
+const req = require('supertest');
+const Todo = require('../../models/todo');
 
 describe('Todo Integration Tests', function() {
-  var server;
-  var currentTodo;
-  var todoParams = { todo: { title: "Test", description: "Test" } };
+  let server;
+  let currentTodo;
+  const todoParams = { todo: { title: "Test", description: "Test" } };
 
   // 
   // Support methods - consider extracting in the future
   //
   function createTodoRecord(done) {
-    t = new Todo(todoParams.todo);
+    const t = new Todo(todoParams.todo);
     t.save(function(err, todo) { 
       currentTodo = todo;
       done(); 
@@ -18,7 +20,7 @@ describe('Todo Integration Tests', function() {
   }
 
   function teardownTodos(done) {
-    Todo.remove({}, function() { done(); });
+    Todo.remove({}, () => done());
   }
 
   function expectNoTodos(done) {
@@ -30,15 +32,10 @@ describe('Todo Integration Tests', function() {
   }
 
   // Set up a dummy server to send requests to
-  before(function() {
-    server = require('../../app');
-  });
+  before(() => server = require('../../app'));
 
   // Close dummy server down when we are done
-  after(function() {
-    server.close();
-  });
-
+  after(() => server.close());
 
   //
   // #index tests 

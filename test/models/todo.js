@@ -1,9 +1,11 @@
-var mongoose = require('mongoose');
-var Todo     = require('../../models/todo');
-var config   = require('../../config');
+'use strict'
+
+const mongoose = require('mongoose');
+const Todo     = require('../../models/todo');
+const config   = require('../../config');
 
 describe('Todo Model', function() {
-  var currentTodo = null;
+  let currentTodo;
 
   // 
   // Before hooks
@@ -14,7 +16,7 @@ describe('Todo Model', function() {
   });
 
   beforeEach(function(done) {
-    t = new Todo({title: "Test", description: "Test"});
+    const t = new Todo({title: "Test", description: "Test"});
     t.save(function(err, todo) {
       currentTodo = todo;
       done();
@@ -30,11 +32,8 @@ describe('Todo Model', function() {
   });
 
   afterEach(function(done) { 
-    Todo.remove({}, function() {
-      done();
-    });
+    Todo.remove({}, () => done());
   });
-
 
   //
   // Validation Tests

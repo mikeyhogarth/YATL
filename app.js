@@ -1,20 +1,21 @@
-var express     = require('express');
-var fs          = require('fs');
-var bodyParser  = require('body-parser');
-var mongoose    = require('mongoose');
-var logger      = require('./utilities/logger');
-var httpLog     = require('morgan')
-var path        = require('path');
-var config      = require('./config');
+'use strict'
+const express     = require('express');
+const fs          = require('fs');
+const bodyParser  = require('body-parser');
+const mongoose    = require('mongoose');
+const logger      = require('./utilities/logger');
+const httpLog     = require('morgan')
+const path        = require('path');
+const config      = require('./config');
 
 // Start the app
-var app = express();
+const app = express();
 
 // Middlewares
 app.use(bodyParser.json());
 
 // Http Logging
-var accessLogStream = fs.createWriteStream(path.join(__dirname,'/log/', config.env +'.log'), {flags: 'a'});
+const accessLogStream = fs.createWriteStream(path.join(__dirname,'/log/', config.env +'.log'), {flags: 'a'});
 app.use(httpLog('combined', {stream: accessLogStream}));
 
 // DB
@@ -24,7 +25,7 @@ mongoose.connect(config.db_host);
 app.use(require('./routes'));
 
 // Listen for requests
-var port   = config.port || process.env.PORT;
-var server = app.listen(port, function() { logger.info("Listening on port " + port) });
+const port   = config.port || process.env.PORT;
+const server = app.listen(port, () => logger.info("Listening on port " + port));
 
 module.exports = server;
