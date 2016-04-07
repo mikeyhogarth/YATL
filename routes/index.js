@@ -1,5 +1,7 @@
-var TodosController = require('../controllers/todos');
-var router          = require('express').Router();
+'use strict'
+
+const TodosController = require('../controllers/todos');
+const router          = require('express').Router();
 
 // Todo Routes
 router.get('/todos/:id',    TodosController.show);

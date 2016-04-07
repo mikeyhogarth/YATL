@@ -1,12 +1,12 @@
-var Todo = require('../models/todo');
+'use strict'
+
+const Todo = require('../models/todo');
 
 /*
  *  GET /todos
  */
 module.exports.index = function(req, res) { 
-  Todo.find({}, function(err, todos) { 
-    res.send(err || todos);
-  });
+  Todo.find({}, (err, todos) => res.send(err || todos));
 }
 
 /*
@@ -14,7 +14,7 @@ module.exports.index = function(req, res) {
  */
 module.exports.show = function(req, res) {
   Todo.findById(req.params.id, function(err, todo) {
-    res.status(todo ? 200 : 404)
+    res.status(todo ? 200 : 404);
     res.send(err || todo); 
   });
 }
@@ -36,7 +36,7 @@ module.exports.update = function(req, res) {
  * POST /todos
  */
 module.exports.create = function(req, res) {
-  todo = new Todo(todoParams(req));
+  const todo = new Todo(todoParams(req));
   todo.save(function(err, todo) {
     res.status(err ? 400 : 201)
     res.send(err || todo);
@@ -52,6 +52,7 @@ module.exports.destroy = function(req, res) {
     res.send(err || null); 
   });
 };
+
 
 /*
  * todoParams
