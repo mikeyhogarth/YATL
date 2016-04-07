@@ -1,12 +1,11 @@
 var TodosController = require('../controllers/todos');
+var router          = require('express').Router();
 
-module.exports.mount = function(app) { 
+// Todo Routes
+router.get('/todos/:id',    TodosController.show);
+router.get('/todos',        TodosController.index);
+router.post('/todos',       TodosController.create);
+router.put('/todos/:id',    TodosController.update);
+router.delete('/todos/:id', TodosController.destroy);
 
-  // Todo Routes
-  app.get('/todos/:id', TodosController.show);
-  app.get('/todos', TodosController.index);
-  app.post('/todos', TodosController.create);
-  app.put('/todos/:id', TodosController.update);
-  app.delete('/todos/:id', TodosController.destroy);
-
-}
+module.exports = router

@@ -5,7 +5,6 @@ var mongoose    = require('mongoose');
 var logger      = require('./utilities/logger');
 var httpLog     = require('morgan')
 var path        = require('path');
-var routes      = require('./routes');
 var config      = require('./config');
 
 // Start the app
@@ -22,7 +21,7 @@ app.use(httpLog('combined', {stream: accessLogStream}));
 mongoose.connect(config.db_host);
 
 // Mount Routes
-routes.mount(app);
+app.use(require('./routes'));
 
 // Listen for requests
 var port   = config.port || process.env.PORT;
