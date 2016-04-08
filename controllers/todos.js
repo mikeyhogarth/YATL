@@ -14,7 +14,7 @@ module.exports.index = function(req, res) {
  */
 module.exports.show = function(req, res) {
   Todo.findById(req.params.id).then(
-    renderResource.bind(res), 
+    renderResource.bind(null, res), 
     err => handleError.call(res, err, 404)
   )
 }
@@ -26,7 +26,7 @@ module.exports.update = function(req, res) {
   Todo.findById(req.params.id).then(todo => {
     todo.set(todoParams(req));
     todo.save().then(
-      renderResource.bind(res),
+      renderResource.bind(null, res),
       err => handleError.call(res, err, 400)
     );
   });
@@ -38,7 +38,7 @@ module.exports.update = function(req, res) {
 module.exports.create = function(req, res) {
   const todo = new Todo(todoParams(req));
   todo.save().then(
-    todo => renderResource.call(res, todo, 201),
+    renderResource.bind(null, res, todo, 201),
     err  => handleError.call(res, err, 400)
   )
 }
@@ -48,7 +48,7 @@ module.exports.create = function(req, res) {
  */ 
 module.exports.destroy = function(req, res) {
   Todo.findById(req.params.id).remove().then(
-    todo => renderResource.call(res, null, 204), 
+    renderResource.bind(null, res, null, 204), 
     err  => handleError.call(res, err, 404)
   )
 }
@@ -61,12 +61,9 @@ function todoParams(req) {
   return req.body.todo;
 }
 
-/*
- * renderResource
- */ 
-function renderResource(resource, statusCode) {
-  this.status(statusCode || 200);
-  this.send(resource);
+function renderResource(response, resource, statusCode) {
+  response.status(statusCode || 200);
+  response.send(resource);
 }
 
 /*
