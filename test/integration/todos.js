@@ -1,7 +1,8 @@
 'use strict'
 
-const req = require('supertest');
-const Todo = require('../../models/todo');
+const req           = require('supertest');
+const Todo          = require('../../models/todo');
+const requestHelper = require('../helpers/request_helper');
 
 describe('Todo Integration Tests', function() {
   let server;
@@ -41,10 +42,15 @@ describe('Todo Integration Tests', function() {
   // #index tests 
   //
   describe('#index', function() {
+    describe('unauthenticated', function() {
+      it('does not allow access', function(done) {
+        req(server).get('/todos').expect(401, done);        
+      });
+    });
 
     describe('with no records', function() {
       it('returns an empty array', function(done) {
-        req(server).get('/todos').expect(200).expect([], done)
+        requestHelper.getWithAuth(req, server, '/todos').expect(200).expect([], done)
       });
     });
 
@@ -59,7 +65,7 @@ describe('Todo Integration Tests', function() {
       }
 
       it('lists the records', function(done) {
-        req(server).get('/todos').expect(200).expect(responseContainsRecord).end(done);
+        requestHelper.getWithAuth(req, server, '/todos').expect(200).expect(responseContainsRecord).end(done);
       });
 
     });
@@ -75,7 +81,7 @@ describe('Todo Integration Tests', function() {
 
     describe('when no record is present', function() {
       it('returns a 404', function(done) {
-        req(server).get('/todos/12345').expect(404, done);
+        requestHelper.getWithAuth(req, server, '/todos/12345').expect(404, done);
       });
     });
 
@@ -87,7 +93,7 @@ describe('Todo Integration Tests', function() {
       }
 
       it('returns the record', function(done) {
-        req(server).get('/todos/' + currentTodo.id).expect(200).expect(responseContainsCurrentRecord).end(done);
+        requestHelper.getWithAuth(req, server,'/todos/' + currentTodo.id).expect(200).expect(responseContainsCurrentRecord).end(done);
       });
     });
     
@@ -110,7 +116,7 @@ describe('Todo Integration Tests', function() {
       afterEach(expectOneTodo);
 
       it('creates the record', function(done) {
-        req(server).post('/todos').send(todoParams).expect(responseContainsRecord).expect(201, done)
+        requestHelper.postWithAuth(req, server, '/todos').send(todoParams).expect(responseContainsRecord).expect(201, done)
       });
     });
 
@@ -118,7 +124,7 @@ describe('Todo Integration Tests', function() {
       afterEach(expectNoTodos);
 
       it('returns a 400', function(done) {
-        req(server).post('/todos').expect(400, done);
+        requestHelper.postWithAuth(req, server, '/todos').expect(400, done);
       });
     });
   });
@@ -142,7 +148,10 @@ describe('Todo Integration Tests', function() {
       afterEach(expectOneTodo);
 
       it('updates the record', function(done) {
-        req(server).put('/todos/' + currentTodo.id).send(newTodoParams).expect(responseContainsUpdatedRecord).expect(200, done)
+        requestHelper.putWithAuth(req, server, '/todos/' + currentTodo.id)
+          .send(newTodoParams)
+          .expect(responseContainsUpdatedRecord)
+          .expect(200, done)
       });
     });
 
@@ -152,7 +161,9 @@ describe('Todo Integration Tests', function() {
       var invalidTodoParams = { todo: { title: "", description: "" } };
 
       it('returns a 400', function(done) {
-        req(server).put('/todos/' + currentTodo.id).send(invalidTodoParams).expect(400, done);
+        requestHelper.putWithAuth(req, server, '/todos/' + currentTodo.id)
+          .send(invalidTodoParams)
+          .expect(400, done);
       });
     });
   });
@@ -167,7 +178,8 @@ describe('Todo Integration Tests', function() {
 
     describe('when no record is present', function() {
       it('returns a 404', function(done) {
-        req(server).delete('/todos/12345').expect(404, done);
+        requestHelper.deleteWithAuth(req, server, '/todos/12345')
+          .expect(404, done);
       });
     });
 
@@ -176,7 +188,8 @@ describe('Todo Integration Tests', function() {
       afterEach(expectNoTodos);
 
       it('returns no content', function(done) {
-        req(server).delete('/todos/' + currentTodo.id).expect(204, done);
+        requestHelper.deleteWithAuth(req, server, '/todos/' + currentTodo.id)
+          .expect(204, done);
       });
     });
   });

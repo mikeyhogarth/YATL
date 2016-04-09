@@ -1,12 +1,12 @@
 'use strict'
-const express     = require('express');
-const fs          = require('fs');
-const bodyParser  = require('body-parser');
-const mongoose    = require('mongoose');
-const logger      = require('./utilities/logger');
-const httpLog     = require('morgan')
-const path        = require('path');
-const config      = require('./config');
+const express         = require('express');
+const fs              = require('fs');
+const bodyParser      = require('body-parser');
+const mongoose        = require('mongoose');
+const logger          = require('./utilities/logger');
+const httpLog         = require('morgan')
+const path            = require('path');
+const config          = require('./config');
 
 // Start the app
 const app = express();
@@ -20,6 +20,9 @@ app.use(httpLog('combined', {stream: accessLogStream}));
 
 // DB
 mongoose.connect(config.db_host);
+
+// Auth
+app.use('/', require('./utilities/authentication'));
 
 // Mount Routes
 app.use(require('./routes'));
