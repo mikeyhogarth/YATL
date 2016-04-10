@@ -1,23 +1,13 @@
 'use strict'
-
 if(process.env.NODE_ENV != 'production') { require('dotenv').config(); }
+const merge = require('merge');
 
-module.exports = ({
-  "development": {
-    "env": "development",
-    "db_host": process.env.DB_HOST,
-    "auth_token": process.env.AUTH_TOKEN,
-    "port": 3000
-  },
-  "test": {
-    "env": "test",
-    "db_host": process.env.TEST_DB_HOST, 
-    "auth_token": process.env.AUTH_TOKEN,
-    "port": 3001
-  },
-  "production": {
-    "env": "production",
-    "auth_token": process.env.AUTH_TOKEN,
-    "db_host": process.env.DB_HOST
-  }
-})[process.env.NODE_ENV || "development"]
+// Default config settings
+const default_config = {
+  auth_token: process.env.AUTH_TOKEN
+}
+
+// Per-environment config settings
+const environment_config = require(('./environment/' + process.env.NODE_ENV) || "development");
+
+module.exports = merge(default_config, environment_config);
