@@ -69,8 +69,34 @@ describe('Todo Integration Tests', function() {
       });
 
     });
-  });
 
+    describe('pagination of three records', function() {
+      // Create three todos
+      beforeEach(function(done) {
+        const todos = [{title:"1",description:"1"},{title:"2",description:"2"},{title:"3",description: "3"}];
+        Todo.create(todos, done);
+      });
+      afterEach(teardownTodos);
+
+      describe('with a page limit of two', function() {
+        describe('page one', function() {
+          it('contains two records', function(done) {
+            requestHelper.getWithAuth(req, server, '/todos?page=1&limit=2')
+              .expect(res => res.body.should.have.length(2))
+              .end(done);    
+          });
+        });
+
+        describe('page two', function() {
+          it('contains one record', function(done) {
+            requestHelper.getWithAuth(req, server, '/todos?page=2&limit=2')
+              .expect(res => res.body.should.have.length(1))
+              .end(done);    
+          });
+        });
+      });
+    });
+  });
 
   //
   // #show tests 

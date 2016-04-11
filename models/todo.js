@@ -12,4 +12,6 @@ const schema = new mongoose.Schema({
     required: true
   }});
 
+schema.plugin(require('mongoose-paginate'));
+
 module.exports = mongoose.model('Todo', schema);

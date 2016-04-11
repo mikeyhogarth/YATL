@@ -1,12 +1,12 @@
 'use strict'
-
 const Todo = require('../models/todo');
 
 /*
  *  GET /todos
  */
 module.exports.index = function(req, res) { 
-  Todo.find({}).then(todos => res.send(todos), handleError.bind(res)); 
+  Todo.paginate({}, pageOptions(req))
+    .then(todos => res.send(todos.docs), handleError.bind(res)); 
 }
 
 /*
@@ -55,6 +55,13 @@ module.exports.destroy = function(req, res) {
 
 
 /*
+ *
+ * END OF PUBLIC INTERFACE
+ *
+ */
+
+
+/*
  * todoParams
  */
 function todoParams(req) {
@@ -75,4 +82,10 @@ function renderResource(response, statusCode, resource) {
 function handleError(response, statusCode, err) {
   response.status(statusCode || 500);
   response.send(err);
+}
+
+function pageOptions(request) {
+  const page  = request.query.page ? parseInt(request.query.page) : 1;
+  const limit = request.query.limit ? parseInt(request.query.limit) : 10;
+  return { page: page, limit: limit };
 }
