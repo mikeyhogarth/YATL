@@ -85,7 +85,7 @@ function handleError(response, statusCode, err) {
 }
 
 function pageOptions(request) {
-  const page  = request.query.page ? parseInt(request.query.page) : 1;
-  const limit = request.query.limit ? parseInt(request.query.limit) : 10;
+  const page  = request.query.page ? parseInt(request.query.page, 10) : 1;
+  const limit = request.query.limit ? parseInt(request.query.limit, 10) : 10;
   return { page: page, limit: limit };
 }
