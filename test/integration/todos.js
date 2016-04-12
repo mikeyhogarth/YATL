@@ -70,6 +70,29 @@ describe('Todo Integration Tests', function() {
 
     });
 
+    describe('sorting', function() {
+      beforeEach(function(done) {
+        Todo.create([{title: 'aaa', description: 'aaa'},{title:'bbb',description:'bbb'}], done);
+      });
+      afterEach(teardownTodos);
+
+      describe('ascending order', function() {
+        it('aaa comes first', function(done) {
+          requestHelper.getWithAuth(req, server, '/todos?sort=title')
+            .expect(res => res.body[0].title.should.equal('aaa'))
+            .end(done);
+        });
+      });
+
+      describe('descending order', function() {
+        it('aaa comes first', function(done) {
+          requestHelper.getWithAuth(req, server, '/todos?sort=-title')
+            .expect(res => res.body[0].title.should.equal('bbb'))
+            .end(done);
+        });
+      });
+    });
+
     describe('pagination of three records', function() {
       // Create three todos
       beforeEach(function(done) {
