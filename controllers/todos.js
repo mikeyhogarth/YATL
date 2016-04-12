@@ -84,8 +84,20 @@ function handleError(response, statusCode, err) {
   response.send(err);
 }
 
+/*
+ * pageOptions
+ */ 
 function pageOptions(request) {
-  const page  = request.query.page ? parseInt(request.query.page, 10) : 1;
-  const limit = request.query.limit ? parseInt(request.query.limit, 10) : 10;
-  return { page: page, limit: limit };
+  const paginationOpts = {};
+
+  if(request.query.page)
+    paginationOpts.page = parseInt(request.query.page, 10);
+
+  if(request.query.limit)
+    paginationOpts.limit = parseInt(request.query.limit, 10);
+  
+  if(request.query.sort)
+    paginationOpts.sort = request.query.sort;
+
+  return paginationOpts;
 }
