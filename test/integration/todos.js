@@ -93,6 +93,31 @@ describe('Todo Integration Tests', function() {
       });
     });
 
+    describe('filtering', function() {
+      beforeEach(function(done) {
+        Todo.create([{title: 'aaa', description: 'aaa'},{title:'bbb',description:'bbb'}], done);
+      });
+      afterEach(teardownTodos);
+
+      describe('by title', function() {
+        it('brings back the appropriate record', function(done) {
+          requestHelper.getWithAuth(req, server, '/todos?filter[fields]=title&filter[query]=bbb')
+            .expect(res => res.body.should.have.length(1))
+            .expect(res => res.body[0].title.should.equal('bbb'))
+            .end(done)
+        });
+      });
+
+      describe('by description', function() {
+        it('brings back the appropriate record', function(done) {
+          requestHelper.getWithAuth(req, server, '/todos?filter[fields]=description&filter[query]=bbb')
+            .expect(res => res.body.should.have.length(1))
+            .expect(res => res.body[0].description.should.equal('bbb'))
+            .end(done)
+        });
+      });
+    });
+
     describe('pagination of three records', function() {
       // Create three todos
       beforeEach(function(done) {

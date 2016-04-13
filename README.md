@@ -12,6 +12,7 @@ implementation of a TODO list in node.js with the following features);
 * Environment-specific config settings
 * Pagination
 * Sorting
+* Filtering
 
 To use: 
 

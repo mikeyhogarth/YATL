@@ -5,7 +5,7 @@ const Todo = require('../models/todo');
  *  GET /todos
  */
 module.exports.index = function(req, res) { 
-  Todo.paginate({}, pageOptions(req))
+  Todo.paginate(filterOptions(req), pageOptions(req))
     .then(todos => res.send(todos.docs), handleError.bind(res)); 
 }
 
@@ -100,4 +100,14 @@ function pageOptions(request) {
     paginationOpts.sort = request.query.sort;
 
   return paginationOpts;
+}
+
+function filterOptions(request) {
+  const filter = {};
+  if(request.query.filter) {
+    request.query.filter.fields.split().forEach(function(field) {
+      filter[field] = request.query.filter.query;
+    });
+  }
+  return filter;
 }
